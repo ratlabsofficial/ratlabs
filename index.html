@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rat Labs | Freemium, Always.</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            min-height: 200vh;
+            cursor: none; /* Hide default cursor */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 0, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 0, 0.05) 0%, transparent 20%);
+        }
+
+        /* Custom cursor dot */
+        .cursor-dot {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #0f0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px 2px #0f0;
+            transition: transform 0.1s ease;
+        }
+
+        /* Smooth mouse trail */
+        .mouse-trail {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #0f0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px 2px #0f0;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 100px;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #0f0;
+            opacity: 0;
+            animation: fadeIn 2s forwards 0.5s;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 2s forwards 1s;
+        }
+
+        .features {
+            text-align: left;
+            margin: 30px 0;
+            opacity: 0;
+            animation: fadeIn 2s forwards 1.5s;
+        }
+
+        .features li {
+            margin-bottom: 10px;
+            list-style-type: none;
+            position: relative;
+            padding-left: 25px;
+            transition: all 0.3s ease;
+            transform-origin: left center;
+        }
+
+        .features li:hover {
+            transform: scale(1.1);
+            text-shadow: 0 0 8px #0f0;
+        }
+
+        .features li:before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            color: #0f0;
+        }
+
+        .btn {
+            background-color: transparent;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            cursor: none; /* Hide default cursor */
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 2s forwards 2s, pulse 2s infinite 3s;
+            position: relative;
+            overflow: hidden;
+            transform-origin: center;
+        }
+
+        .btn:hover {
+            background-color: #0f0;
+            color: #000;
+            text-shadow: 0 0 5px #000;
+            box-shadow: 0 0 20px #0f0;
+            transform: scale(1.1);
+        }
+
+        .btn:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover:after {
+            left: 100%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 5px #0f0; }
+            50% { box-shadow: 0 0 20px #0f0; }
+            100% { box-shadow: 0 0 5px #0f0; }
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(0, 255, 0, 0.05) 50%, 
+                transparent 100%);
+            background-size: 100% 8px;
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+            z-index: 9997;
+            opacity: 0.5;
+        }
+
+        @keyframes scan {
+            from { background-position: 0 0; }
+            to { background-position: 0 100%; }
+        }
+
+        .glitch {
+            position: relative;
+        }
+
+        .glitch:before, .glitch:after {
+            content: "RAT LABS";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            overflow: hidden;
+            color: #0f0;
+        }
+
+        .glitch:before {
+            left: 2px;
+            text-shadow: -2px 0 #f00;
+            animation: glitch-effect 3s infinite linear alternate-reverse;
+            clip: rect(44px, 450px, 56px, 0);
+        }
+
+        .glitch:after {
+            left: -2px;
+            text-shadow: -2px 0 #00f;
+            animation: glitch-effect 2s infinite linear alternate-reverse;
+            clip: rect(44px, 450px, 56px, 0);
+        }
+
+        @keyframes glitch-effect {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            10% { clip: rect(112px, 9999px, 76px, 0); }
+            20% { clip: rect(85px, 9999px, 77px, 0); }
+            30% { clip: rect(27px, 9999px, 97px, 0); }
+            40% { clip: rect(64px, 9999px, 98px, 0); }
+            50% { clip: rect(61px, 9999px, 85px, 0); }
+            60% { clip: rect(99px, 9999px, 114px, 0); }
+            70% { clip: rect(34px, 9999px, 115px, 0); }
+            80% { clip: rect(98px, 9999px, 129px, 0); }
+            90% { clip: rect(43px, 9999px, 96px, 0); }
+            100% { clip: rect(82px, 9999px, 64px, 0); }
+        }
+
+        /* Scrolling fade effect */
+        .fade-out {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .cat-section {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            z-index: 1;
+            padding-top: 100px;
+        }
+
+        .cat-container {
+            max-width: 600px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s, transform 1s;
+        }
+
+        .cat-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cat-image {
+            max-width: 100%;
+            max-height: 500px;
+            border: 2px solid #0f0;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .cat-message {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #0f0;
+        }
+
+        /* Matrix rain effect */
+        .matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="scanline"></div>
+    <canvas class="matrix-canvas"></canvas>
+    
+    <div class="container">
+        <h1 class="glitch">RAT LABS</h1>
+        
+        <p>Basic, Powerful, Great.</p>
+        
+        <div class="features">
+            <li>Great to use.</li>
+            <li>Regular updates with new features</li>
+            <li>User-friendly interface</li>
+            <li>Compatible with most Roblox games</li>
+            <li>100% freemium with no hidden costs</li>
+        </div>
+        
+        <p>Join our community and take your Roblox experience to the next level.</p>
+        
+        <button class="btn" onclick="window.location.href='https://discord.gg/nahS6hnHrG'">GET RAT LABS</button>
+    </div>
+
+    <div class="fade-out"></div>
+
+    <div class="cat-section">
+        <div class="cat-container">
+            <img class="cat-image" src="" alt="Random cat">
+            <div class="cat-message">‼️ RAT LABS APPROVED CAT ‼️</div>
+        </div>
+    </div>
+
+    <script>
+        // Custom cursor and smooth trail effect
+        const cursorDot = document.querySelector('.cursor-dot');
+        const trailElements = [];
+        const trailCount = 10; // Number of trail elements
+        
+        // Create trail elements
+        for (let i = 0; i < trailCount; i++) {
+            const trail = document.createElement('div');
+            trail.className = 'mouse-trail';
+            trail.style.opacity = 1 - (i / trailCount);
+            trail.style.width = `${10 - (i * 0.5)}px`;
+            trail.style.height = `${10 - (i * 0.5)}px`;
+            document.body.appendChild(trail);
+            trailElements.push(trail);
+        }
+        
+        let mouseX = 0, mouseY = 0;
+        let trailX = 0, trailY = 0;
+        let trailPositions = Array(trailCount).fill({x: 0, y: 0});
+        
+        // Smooth the trail movement with easing
+        const ease = 0.2; // Adjust this value for more/less smoothing
+        
+        const animateTrail = () => {
+            // Update cursor dot position
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
+            
+            // Update trail positions with easing
+            let leaderX = mouseX;
+            let leaderY = mouseY;
+            
+            for (let i = 0; i < trailCount; i++) {
+                const trail = trailElements[i];
+                const pos = trailPositions[i];
+                
+                // Calculate new position with easing
+                const newX = pos.x + (leaderX - pos.x) * ease;
+                const newY = pos.y + (leaderY - pos.y) * ease;
+                
+                // Update trail element position
+                trail.style.left = `${newX}px`;
+                trail.style.top = `${newY}px`;
+                
+                // Store current position for next frame
+                trailPositions[i] = {x: newX, y: newY};
+                
+                // Next element follows this one
+                leaderX = newX;
+                leaderY = newY;
+            }
+            
+            requestAnimationFrame(animateTrail);
+        };
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        // Start animation
+        animateTrail();
+
+        // Matrix rain effect
+        const canvas = document.querySelector('.matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const chars = "01";
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0f0';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 33);
+
+        // Cat API and scroll effects
+        const catContainer = document.querySelector('.cat-container');
+        const catImage = document.querySelector('.cat-image');
+        
+        // Fetch random cat image
+        fetch('https://cataas.com/cat?json=true')
+            .then(response => response.json())
+            .then(data => {
+                catImage.src = `https://cataas.com${data.url}`;
+            })
+            .catch(error => {
+                console.error('Error fetching cat image:', error);
+                catImage.src = 'https://cataas.com/cat';
+            });
+        
+        // Scroll detection for fade effects
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.body.scrollHeight;
+            
+            // Show cat container when scrolled to bottom
+            if (scrollPosition + windowHeight > documentHeight - 500) {
+                catContainer.classList.add('visible');
+            }
+            
+            // Adjust fade-out gradient opacity based on scroll position
+            const fadeStart = documentHeight - windowHeight - 300;
+            const fadeProgress = Math.min(1, Math.max(0, (scrollPosition - fadeStart) / 300));
+            document.querySelector('.fade-out').style.opacity = 1 - fadeProgress;
+        });
+        
+        // Initialize fade-out gradient
+        document.querySelector('.fade-out').style.opacity = 1;
+    </script>
+</body>
+</html>
