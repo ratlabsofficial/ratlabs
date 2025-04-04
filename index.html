@@ -13,7 +13,7 @@
             padding: 0;
             overflow-x: hidden;
             min-height: 200vh;
-            cursor: none;
+            cursor: none; /* Hide default cursor */
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(0, 255, 0, 0.05) 0%, transparent 20%),
                 radial-gradient(circle at 90% 80%, rgba(0, 255, 0, 0.05) 0%, transparent 20%);
@@ -109,18 +109,14 @@
             padding: 15px 30px;
             font-size: 1.2rem;
             font-family: 'Courier New', monospace;
-            cursor: none;
-            margin-top: 20px;
-            transition: all 0.3s;
+            cursor: none; /* Hide default cursor */
+            margin-top: 30px;
+            transition: all 0.3s ease;
             opacity: 0;
             animation: fadeIn 2s forwards 2s, pulse 2s infinite 3s;
             position: relative;
             overflow: hidden;
             transform-origin: center;
-            display: block;
-            width: 200px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .btn:hover {
@@ -283,6 +279,55 @@
             opacity: 0.1;
             pointer-events: none;
         }
+
+        /* Audio player section */
+        .audio-section {
+            position: relative;
+            width: 100%;
+            padding: 50px 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-top: 1px solid #0f0;
+            border-bottom: 1px solid #0f0;
+            margin: 50px 0;
+            z-index: 2;
+        }
+
+        .audio-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .audio-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        .elfsight-app {
+            border: 1px solid #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        /* New cat button */
+        .cat-btn {
+            background-color: transparent;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            margin-top: 20px;
+            cursor: none;
+            transition: all 0.3s;
+        }
+
+        .cat-btn:hover {
+            background-color: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 10px #0f0;
+        }
     </style>
 </head>
 <body>
@@ -306,15 +351,26 @@
         <p>Join our community and take your Roblox experience to the next level.</p>
         
         <button class="btn" onclick="window.location.href='https://discord.gg/nahS6hnHrG'">GET RAT LABS</button>
-        <button class="btn" onclick="window.location.href='https://ratlabsofficial.github.io/ratlabs/scripts.html'">SCRIPTS</button>
+    </div>
+
+    <!-- Audio Player Section -->
+    <div class="audio-section">
+        <div class="audio-container">
+            <div class="audio-title">RAT LABS OFFICIAL SOUNDTRACK</div>
+            <!-- Elfsight Audio Player -->
+            <script src="https://static.elfsight.com/platform/platform.js" async></script>
+            <div class="elfsight-app-0f633f93-6547-4a19-b756-de1786b9ba99" data-elfsight-app-lazy></div>
+        </div>
     </div>
 
     <div class="fade-out"></div>
 
+    <!-- Cat Section -->
     <div class="cat-section">
         <div class="cat-container">
-            <img class="cat-image" src="" alt="Random cat">
+            <img class="cat-image" src="https://cataas.com/cat" alt="Random cat">
             <div class="cat-message">‼️ RAT LABS APPROVED CAT ‼️</div>
+            <button class="cat-btn" onclick="refreshCat()">GENERATE NEW CAT</button>
         </div>
     </div>
 
@@ -322,8 +378,9 @@
         // Custom cursor and smooth trail effect
         const cursorDot = document.querySelector('.cursor-dot');
         const trailElements = [];
-        const trailCount = 10;
+        const trailCount = 10; // Number of trail elements
         
+        // Create trail elements
         for (let i = 0; i < trailCount; i++) {
             const trail = document.createElement('div');
             trail.className = 'mouse-trail';
@@ -335,14 +392,18 @@
         }
         
         let mouseX = 0, mouseY = 0;
+        let trailX = 0, trailY = 0;
         let trailPositions = Array(trailCount).fill({x: 0, y: 0});
         
-        const ease = 0.2;
+        // Smooth the trail movement with easing
+        const ease = 0.2; // Adjust this value for more/less smoothing
         
         const animateTrail = () => {
+            // Update cursor dot position
             cursorDot.style.left = `${mouseX}px`;
             cursorDot.style.top = `${mouseY}px`;
             
+            // Update trail positions with easing
             let leaderX = mouseX;
             let leaderY = mouseY;
             
@@ -350,13 +411,18 @@
                 const trail = trailElements[i];
                 const pos = trailPositions[i];
                 
+                // Calculate new position with easing
                 const newX = pos.x + (leaderX - pos.x) * ease;
                 const newY = pos.y + (leaderY - pos.y) * ease;
                 
+                // Update trail element position
                 trail.style.left = `${newX}px`;
                 trail.style.top = `${newY}px`;
+                
+                // Store current position for next frame
                 trailPositions[i] = {x: newX, y: newY};
                 
+                // Next element follows this one
                 leaderX = newX;
                 leaderY = newY;
             }
@@ -369,11 +435,13 @@
             mouseY = e.clientY;
         });
         
+        // Start animation
         animateTrail();
 
         // Matrix rain effect
         const canvas = document.querySelector('.matrix-canvas');
         const ctx = canvas.getContext('2d');
+        
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         
@@ -411,16 +479,21 @@
         const catContainer = document.querySelector('.cat-container');
         const catImage = document.querySelector('.cat-image');
         
-        // Fetch random cat image
-        fetch('https://cataas.com/cat?json=true')
-            .then(response => response.json())
-            .then(data => {
-                catImage.src = `https://cataas.com${data.url}`;
-            })
-            .catch(error => {
-                console.error('Error fetching cat image:', error);
-                catImage.src = 'https://cataas.com/cat';
-            });
+        // Function to refresh cat image
+        function refreshCat() {
+            // Add timestamp to prevent caching
+            const timestamp = new Date().getTime();
+            catImage.src = `https://cataas.com/cat?t=${timestamp}`;
+            
+            // Add glitch effect
+            catImage.style.filter = 'drop-shadow(0 0 5px #0f0)';
+            setTimeout(() => {
+                catImage.style.filter = 'none';
+            }, 300);
+        }
+        
+        // Initial cat load
+        refreshCat();
         
         // Scroll detection for fade effects
         window.addEventListener('scroll', () => {
