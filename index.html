@@ -279,6 +279,55 @@
             opacity: 0.1;
             pointer-events: none;
         }
+
+        /* Audio player section */
+        .audio-section {
+            position: relative;
+            width: 100%;
+            padding: 50px 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-top: 1px solid #0f0;
+            border-bottom: 1px solid #0f0;
+            margin: 50px 0;
+            z-index: 2;
+        }
+
+        .audio-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .audio-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        .elfsight-app {
+            border: 1px solid #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        /* New cat button */
+        .cat-btn {
+            background-color: transparent;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            margin-top: 20px;
+            cursor: none;
+            transition: all 0.3s;
+        }
+
+        .cat-btn:hover {
+            background-color: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 10px #0f0;
+        }
     </style>
 </head>
 <body>
@@ -304,12 +353,24 @@
         <button class="btn" onclick="window.location.href='https://discord.gg/nahS6hnHrG'">GET RAT LABS</button>
     </div>
 
+    <!-- Audio Player Section -->
+    <div class="audio-section">
+        <div class="audio-container">
+            <div class="audio-title">RAT LABS OFFICIAL SOUNDTRACK</div>
+            <!-- Elfsight Audio Player -->
+            <script src="https://static.elfsight.com/platform/platform.js" async></script>
+            <div class="elfsight-app-0f633f93-6547-4a19-b756-de1786b9ba99" data-elfsight-app-lazy></div>
+        </div>
+    </div>
+
     <div class="fade-out"></div>
 
+    <!-- Cat Section -->
     <div class="cat-section">
         <div class="cat-container">
-            <img class="cat-image" src="" alt="Random cat">
+            <img class="cat-image" src="https://cataas.com/cat" alt="Random cat">
             <div class="cat-message">‼️ RAT LABS APPROVED CAT ‼️</div>
+            <button class="cat-btn" onclick="refreshCat()">GENERATE NEW CAT</button>
         </div>
     </div>
 
@@ -418,16 +479,21 @@
         const catContainer = document.querySelector('.cat-container');
         const catImage = document.querySelector('.cat-image');
         
-        // Fetch random cat image
-        fetch('https://cataas.com/cat?json=true')
-            .then(response => response.json())
-            .then(data => {
-                catImage.src = `https://cataas.com${data.url}`;
-            })
-            .catch(error => {
-                console.error('Error fetching cat image:', error);
-                catImage.src = 'https://cataas.com/cat';
-            });
+        // Function to refresh cat image
+        function refreshCat() {
+            // Add timestamp to prevent caching
+            const timestamp = new Date().getTime();
+            catImage.src = `https://cataas.com/cat?t=${timestamp}`;
+            
+            // Add glitch effect
+            catImage.style.filter = 'drop-shadow(0 0 5px #0f0)';
+            setTimeout(() => {
+                catImage.style.filter = 'none';
+            }, 300);
+        }
+        
+        // Initial cat load
+        refreshCat();
         
         // Scroll detection for fade effects
         window.addEventListener('scroll', () => {
