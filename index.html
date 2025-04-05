@@ -383,6 +383,26 @@
             transform: translateY(-2px);
         }
 
+        /* Secret button styles */
+        .secret-button {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 24px;
+            background: transparent;
+            border: none;
+            color: #666;
+            cursor: none;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+            z-index: 9998;
+        }
+
+        .secret-button:hover {
+            opacity: 1;
+            color: var(--discord-red);
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -425,6 +445,9 @@
     <canvas id="matrix" class="matrix-bg"></canvas>
     
     <div class="cursor-dot"></div>
+    
+    <!-- Secret Button -->
+    <button class="secret-button" id="secretButton" title="You found me!">💀</button>
     
     <header>
         <nav>
@@ -604,6 +627,21 @@
             
             if (scrollPosition + windowHeight > documentHeight - 500) {
                 catContainer.classList.add('visible');
+            }
+        });
+
+        // Secret button functionality
+        const secretButton = document.getElementById('secretButton');
+        secretButton.addEventListener('click', () => {
+            window.location.href = 'https://ratlabsofficial.github.io/ratlabs/secret.html';
+        });
+
+        // Make the secret button more visible when scrolled to bottom
+        window.addEventListener('scroll', () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
+                secretButton.style.opacity = '0.7';
+            } else {
+                secretButton.style.opacity = '0.3';
             }
         });
     </script>
