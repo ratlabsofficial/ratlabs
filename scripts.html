@@ -5,295 +5,315 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rat Labs Scripts</title>
     <style>
+        :root {
+            --discord-blurple: #5865F2;
+            --discord-green: #57F287;
+            --discord-yellow: #FEE75C;
+            --discord-fuchsia: #EB459E;
+            --discord-red: #ED4245;
+            --discord-dark: #2C2F33;
+            --discord-darker: #23272A;
+            --discord-black: #1E1F22;
+            --discord-text: #FFFFFF;
+            --discord-text-secondary: #B5BAC1;
+            --neon-glow: 0 0 15px rgba(87, 242, 135, 0.7);
+        }
+        
         body {
-            background-color: #000;
-            color: #0f0;
-            font-family: 'Courier New', monospace;
+            background-color: var(--discord-black);
+            color: var(--discord-text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
             min-height: 100vh;
             cursor: none;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 255, 0, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(0, 255, 0, 0.05) 0%, transparent 20%);
         }
 
-        .cursor-dot {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background-color: #0f0;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px 2px #0f0;
-            transition: transform 0.1s ease;
-        }
-
-        .mouse-trail {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background-color: #0f0;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px 2px #0f0;
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
-        }
-
-        .return-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: transparent;
-            color: #0f0;
-            border: 2px solid #0f0;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-family: 'Courier New', monospace;
-            cursor: none;
-            transition: all 0.3s ease;
-            z-index: 9999;
-        }
-
-        .return-btn:hover {
-            background-color: #0f0;
-            color: #000;
-            text-shadow: 0 0 5px #000;
-            box-shadow: 0 0 20px #0f0;
-            transform: scale(1.1);
-        }
-
-        .container {
-            text-align: center;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            padding-top: 100px;
-            position: relative;
-            z-index: 2;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 30px;
-            text-shadow: 0 0 10px #0f0;
-            opacity: 0;
-            animation: fadeIn 2s forwards 0.5s;
-        }
-
-        .script-box {
-            background-color: rgba(0, 20, 0, 0.3);
-            border: 1px solid #0f0;
-            padding: 20px;
-            margin: 30px 0;
-            text-align: left;
-            overflow-x: auto;
-            opacity: 0;
-            animation: fadeIn 2s forwards 1s;
-            position: relative;
-            white-space: pre;
-            font-family: 'Courier New', monospace;
-        }
-
-        .script-box::before {
-            content: "SCRIPT";
-            position: absolute;
-            top: -10px;
-            left: 10px;
-            background: #000;
-            padding: 0 10px;
-            font-size: 0.8rem;
-            color: #0f0;
-        }
-
-        .btn {
-            background-color: transparent;
-            color: #0f0;
-            border: 2px solid #0f0;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            font-family: 'Courier New', monospace;
-            cursor: none;
-            transition: all 0.3s ease;
-            opacity: 0;
-            animation: fadeIn 2s forwards 1.5s;
-            position: relative;
-            overflow: hidden;
-            transform-origin: center;
-        }
-
-        .btn:hover {
-            background-color: #0f0;
-            color: #000;
-            text-shadow: 0 0 5px #000;
-            box-shadow: 0 0 20px #0f0;
-            transform: scale(1.1);
-        }
-
-        .btn:after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.4), transparent);
-            transition: 0.5s;
-        }
-
-        .btn:hover:after {
-            left: 100%;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .scanline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, 
-                transparent 0%, 
-                rgba(0, 255, 0, 0.05) 50%, 
-                transparent 100%);
-            background-size: 100% 8px;
-            pointer-events: none;
-            animation: scan 8s linear infinite;
-            z-index: 9997;
-            opacity: 0.5;
-        }
-
-        @keyframes scan {
-            from { background-position: 0 0; }
-            to { background-position: 0 100%; }
-        }
-
-        .matrix-canvas {
+        /* Matrix rain effect */
+        .matrix-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.1;
+            opacity: 0.03;
             pointer-events: none;
         }
-    </style>
-</head>
-<body>
-    <div class="cursor-dot"></div>
-    <div class="scanline"></div>
-    <canvas class="matrix-canvas"></canvas>
-    
-    <a href="https://ratlabsofficial.github.io/ratlabs/" class="return-btn">RETURN TO MAIN PAGE</a>
-    
-    <div class="container">
-        <h1 class="glitch">RAT LABS SCRIPTS</h1>
-        
-        <div class="script-box">
-loadstring([[\104\116\116\112\115\58\47\47\103\105\116\104\117\98\46\99\111\109\47\99\52\115\104\100\101\118\118\47\114\111\98\108\111\120\115\99\114\105\112\116\116\104\105\110\103\109\97\106\105\103\47\98\108\111\98\47\109\97\105\110\47\82\97\116\76\97\98\115\65\114\115\101\110\97\108\10]])()        </div>
-        
-        <button class="btn" onclick="window.location.href='https://workink.net/1YWE/km5p4fuz'">GET KEY</button>
-    </div>
 
-    <script>
-        // Custom cursor and smooth trail effect
-        const cursorDot = document.querySelector('.cursor-dot');
-        const trailElements = [];
-        const trailCount = 10;
-        
-        for (let i = 0; i < trailCount; i++) {
-            const trail = document.createElement('div');
-            trail.className = 'mouse-trail';
-            trail.style.opacity = 1 - (i / trailCount);
-            trail.style.width = `${10 - (i * 0.5)}px`;
-            trail.style.height = `${10 - (i * 0.5)}px`;
-            document.body.appendChild(trail);
-            trailElements.push(trail);
+        /* Custom cursor */
+        .cursor-dot {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background-color: var(--discord-green);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px 3px var(--discord-green);
+            transition: transform 0.1s ease, width 0.2s, height 0.2s;
+            mix-blend-mode: difference;
         }
-        
-        let mouseX = 0, mouseY = 0;
-        let trailPositions = Array(trailCount).fill({x: 0, y: 0});
-        
-        const ease = 0.2;
-        
-        const animateTrail = () => {
-            cursorDot.style.left = `${mouseX}px`;
-            cursorDot.style.top = `${mouseY}px`;
-            
-            let leaderX = mouseX;
-            let leaderY = mouseY;
-            
-            for (let i = 0; i < trailCount; i++) {
-                const trail = trailElements[i];
-                const pos = trailPositions[i];
-                
-                const newX = pos.x + (leaderX - pos.x) * ease;
-                const newY = pos.y + (leaderY - pos.y) * ease;
-                
-                trail.style.left = `${newX}px`;
-                trail.style.top = `${newY}px`;
-                trailPositions[i] = {x: newX, y: newY};
-                
-                leaderX = newX;
-                leaderY = newY;
+
+        .cursor-dot.active {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(87, 242, 135, 0.3);
+            border: 2px solid var(--discord-green);
+        }
+
+        /* Header */
+        header {
+            background-color: rgba(30, 31, 34, 0.8);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(88, 101, 242, 0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--discord-green) 0%, var(--discord-blurple) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            text-shadow: var(--neon-glow);
+        }
+
+        /* Main content */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+            padding-top: 150px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--discord-green) 0%, var(--discord-blurple) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: var(--neon-glow);
+            opacity: 0;
+            animation: fadeIn 1s forwards 0.5s;
+        }
+
+        /* Script box */
+        .script-box {
+            background-color: var(--discord-dark);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: left;
+            overflow-x: auto;
+            position: relative;
+            border: 1px solid rgba(88, 101, 242, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            animation: fadeIn 1s forwards 1s;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+        }
+
+        .script-box::before {
+            content: "SCRIPT";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--discord-black);
+            padding: 0 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--discord-green);
+            border-radius: 5px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 1s forwards 1.5s;
+            cursor: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--discord-green);
+            color: var(--discord-black);
+            box-shadow: var(--neon-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(87, 242, 135, 0.8);
+        }
+
+        .return-btn {
+            background-color: var(--discord-dark);
+            color: var(--discord-text);
+            border: 2px solid var(--discord-green);
+            padding: 12px 24px;
+            font-weight: 600;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .return-btn:hover {
+            background-color: var(--discord-green);
+            color: var(--discord-black);
+            box-shadow: 0 0 30px rgba(87, 242, 135, 0.5);
+            transform: translateY(-2px);
+            border-color: transparent;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
             }
             
-            requestAnimationFrame(animateTrail);
-        };
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-        
-        animateTrail();
+            .container {
+                padding-top: 120px;
+            }
+            
+            .script-box {
+                padding: 20px;
+                font-size: 14px;
+            }
+            
+            .btn {
+                padding: 14px 28px;
+                font-size: 16px;
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <canvas id="matrix" class="matrix-bg"></canvas>
+    
+    <div class="cursor-dot"></div>
+    
+    <header>
+        <nav>
+            <a href="https://ratlabsofficial.github.io/ratlabs/" class="logo">RAT LABS</a>
+            <a href="https://ratlabsofficial.github.io/ratlabs/" class="return-btn">RETURN TO MAIN PAGE</a>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="container">
+            <h1>RAT LABS SCRIPTS</h1>
+            
+            <div class="script-box">
+loadstring([[\104\116\116\112\115\58\47\47\103\105\116\104\117\98\46\99\111\109\47\99\52\115\104\100\101\118\118\47\114\111\98\108\111\120\115\99\114\105\112\116\116\104\105\110\103\109\97\106\105\103\47\98\108\111\98\47\109\97\105\110\47\82\97\116\76\97\98\115\65\114\115\101\110\97\108\10]])()            </div>
+            
+            <button class="btn btn-primary" onclick="window.location.href='https://workink.net/1YWE/km5p4fuz'">GET KEY</button>
+        </div>
+    </main>
 
+    <script>
         // Matrix rain effect
-        const canvas = document.querySelector('.matrix-canvas');
+        const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
+        
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         
-        const chars = "01";
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        
+        const alphabet = katakana + latin + nums;
+        
         const fontSize = 14;
         const columns = canvas.width / fontSize;
-        const drops = [];
         
-        for (let i = 0; i < columns; i++) {
-            drops[i] = 1;
+        const rainDrops = [];
+        
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
         }
         
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        const draw = () => {
+            ctx.fillStyle = 'rgba(30, 31, 34, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            ctx.fillStyle = '#0f0';
+            ctx.fillStyle = '#57F287';
             ctx.font = fontSize + 'px monospace';
             
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
                 
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
                 }
-                
-                drops[i]++;
+                rainDrops[i]++;
             }
-        }
+        };
         
-        setInterval(drawMatrix, 33);
+        setInterval(draw, 30);
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Custom cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+        });
+
+        // Active state for cursor when hovering clickable elements
+        const clickableElements = document.querySelectorAll('a, button, .script-box');
+        clickableElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorDot.classList.add('active');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('active');
+            });
+        });
     </script>
 </body>
 </html>
